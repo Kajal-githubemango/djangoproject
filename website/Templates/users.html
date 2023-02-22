@@ -1,0 +1,91 @@
+{% include 'base.html' %}
+<!DOCTYPE html>
+<html>
+<head>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+<style>
+table {
+  font-family: arial, sans-serif;
+  border-collapse: collapse;
+  width: 100%;
+}
+
+td, th {
+  border: 1px solid #dddddd;
+  text-align: left;
+  padding: 8px;
+}
+
+tr:nth-child(even) {
+  background-color: #dddddd;
+}
+</style>
+</head>
+<body>
+    
+  
+  <div class ="container my-3">
+    <div class="d-flex" style ="justify-content: space-between">
+      <h2 class="my-3">CustomerHistory </h2>
+      <div class="col-xl-12 d-flex">
+         <form action="" method="get" class="form-inline mx-auto"> 
+            <input type="text" class="form-control" name="searchname" placeholder="enter your name" >
+            <input type="submit" class ="btn-btn-success" value="Search">
+         </form>
+      </div>
+    </div>
+    <table>
+      <tr>
+        <th>Phone no.</th>
+        <th>Name</th>
+        <th>OPD CHARGES</th>
+        <th> MEDICAL CHARGES</th>
+        <th> PROCEDURE</th>
+        <th> Total</th>
+        <th> DATE</th>
+    
+      </tr>
+        {% for i in pt %}
+        <tr class = "center">
+          <td>{{i.Customer_info.user}} </td>
+          <td>{{i.Customer_info}} </td>
+          <td>{{i.opd}} </td>
+          <td>{{i.med}} </td>
+          <td>{{i.procedure}} </td>
+          <td>{{i.total}} </td>
+          <td>{{i.Customer_info.dt}} </td>
+          
+        </tr>
+        {% endfor%}
+        
+        
+      
+    </table> 
+
+ 
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script>
+  
+</body>
+</html>
+
+
+
+{% comment %} <table class="table">
+  <thead>
+      <tr>
+          <th>Year with most launches</th>
+          <th>Launch site with most launches</th>
+          <th>Number of launches between 2019 and 2021</th>
+      </tr>
+  </thead>
+  <tbody>
+
+      <tr>
+        {% for i in pmt %}
+          <td>{{ i.phone }}</td>
+        {% endfor %}
+      </tr>
+
+  </tbody>
+</table> {% endcomment %}
