@@ -30,22 +30,24 @@ tr:nth-child(even) {
     <table>
       <tr>
         <th>Name</th>
-        <th>OPD CHARGES</th>
-        <th> MEDICAL CHARGES</th>
-        <th> PROCEDURE</th>
+        <th> Date</th>
+
+        <th>Opd Charges</th>
+        <th> Medicine Charges</th>
+        <th> Procedure</th>
         <th> Total</th>
-        <th> DATE</th>
     
       </tr>
         {% for i in payment %}
         <tr class = "center">
           
           <td>{{i.Customer_info}} </td>
+          <td>{{i.date}} </td>
+
           <td>{{i.opd}} </td>
           <td>{{i.med}} </td>
           <td>{{i.procedure}} </td>
           <td>{{i.total}} </td>
-          <td>{{i.Customer_info.dt}} </td>
           
         </tr>
         {% endfor%}

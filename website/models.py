@@ -11,7 +11,7 @@ class Customer(models.Model):
     user = models.ForeignKey(User, on_delete=models.PROTECT, null =True, blank=True)
     name = models.CharField( max_length=50)
     # phone =  models.BigIntegerField()
-    dt = models.DateField(auto_now_add=True, null= True)
+    dt = models.DateTimeField(default=timezone.now)
     
     
     def __str__(self):
@@ -25,6 +25,7 @@ class payment(models.Model):
     status = models.CharField(max_length=10, choices=STATUS_CHOICES, default='no')
     Customer_info = models.ForeignKey(Customer, on_delete=models.CASCADE)
     total = models.IntegerField(null =True, blank= True)
+    date = models.DateTimeField(default=timezone.now)
     # date = models.DateField(default=timezone.now)
     
     
