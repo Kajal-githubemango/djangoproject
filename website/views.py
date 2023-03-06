@@ -22,7 +22,7 @@ from datetime import datetime, timezone
 
 
 def RegisterCustomerAPIView(request):
-    return render(request, 'list.html', {"flag": True})
+    return render(request, 'form.html', {"flag": True})
 
 
 def webview(request):
@@ -55,14 +55,14 @@ def detail_report(request):
             login(request, user)
             customer = Customer.objects.filter(user=user).last()
             if not customer:
-                return render(request, 'list.html')
-            paymenthistory = payment.objects.filter(Customer_info=customer)
+                return render(request, 'form.html')
+            paymenthistory = payment.objects.filter(Customer_info=customer).order_by('-date')
             return render(request, 'user.html', {"payment": paymenthistory})
         else:
             user1 = User.objects.create_user(
                 username=number, password=number[:3]+"@123")
             login(request, user1)
-            return render(request, 'list.html')
+            return render(request, 'form.html')
     return render(request, 'home.html')
 
 
@@ -97,46 +97,6 @@ def loginview(request):
 # Import the python xlwt module.
 
 
-def export_users_xls(request):
-    response = HttpResponse(content_type='application/ms-excel')
-    response['Content-Disposition'] = 'attachment; filename="payment.xls"'
-
-    now = datetime.now(timezone.utc)
-
-    wb = xlwt.Workbook(encoding='utf-8')
-    # this will make a sheet named Users Data
-    ws = wb.add_sheet('payment Data')
-
-    # Sheet header, first row
-    row_num = 0
-
-    font_style = xlwt.XFStyle()
-    font_style.font.bold = True
-
-    columns = ['Phone no.', 'Name', 'OPD CHARGES',
-               'MEDICAL CHARGES', 'PROCEDURE ', 'Total', 'Date']
-
-    for col_num in range(len(columns)):
-        # at 0 row 0 column
-        ws.write(row_num, col_num, columns[col_num], font_style)
-
-    # Sheet body, remaining rows
-    font_style = xlwt.XFStyle()
-
-    rows = payment.objects.all().values_list('Customer_info__user__username',
-                                             'Customer_info__name', 'opd', 'med', 'procedure', 'total')
-    row1 = payment.objects.all()
-    for row in rows:
-        row_num += 1
-        for col_num in range(len(row)):
-            ws.write(row_num, col_num, row[col_num], font_style)
-    for i in row1:
-
-        ws.write(row_num, 7, i.date, font_style)
-
-    wb.save(response)
-
-    return response
 
 
 def download_excel_data(request):
@@ -171,17 +131,33 @@ def download_excel_data(request):
     font_style = xlwt.XFStyle()
 
     # get your data, from database or from a text file...
-    data = payment.objects.all()  # dummy method to fetch data.
+    # customer = Customer.objects.all()
+    # obj1 = payment(opd=opd, med=med, procedure=procedure,
+    #                        Customer_info=obj, status="yes", total=total)
+    # obj1.save()
+    data = Customer.objects.all()  # dummy method to fetch data.
     # data = [[x.strftime("%Y-%m-%d %H:%M") if isinstance(x, datetime.datetime) else x for x in row] for row in data ]
     for my_row in data:
         row_num = row_num + 1
-        ws.write(row_num, 0, my_row.Customer_info.user.username, font_style)
-        ws.write(row_num, 1, my_row.Customer_info.name, font_style)
-        ws.write(row_num, 2, my_row.opd, font_style)
-        ws.write(row_num, 3, my_row.med, font_style)
-        ws.write(row_num, 4, my_row.procedure, font_style)
-        ws.write(row_num, 5, my_row.total, font_style)
-        ws.write(row_num, 6, str(my_row.date.date()), font_style)
+        opd_sum = 0
+        med_sum = 0
+        procedure_sum = 0
+        for i in my_row.payments.all():
+            opd_sum = opd_sum + int(i.opd)
+            med_sum = med_sum + int(i.med)
+            procedure_sum = procedure_sum + int(i.procedure)
+        total = opd_sum + med_sum + procedure_sum
+
+        ws.write(row_num, 0, my_row.user.username, font_style)
+        ws.write(row_num, 1, my_row.name, font_style)
+        ws.write(row_num, 2, opd_sum, font_style)
+        ws.write(row_num, 3, med_sum, font_style)
+        ws.write(row_num, 4, procedure_sum, font_style)
+        ws.write(row_num, 5, total, font_style)
+        ws.write(row_num, 6, str(my_row.dt.date()), font_style)
 
     wb.save(response)
     return response
+
+                 
+    

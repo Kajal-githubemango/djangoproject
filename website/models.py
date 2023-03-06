@@ -23,7 +23,7 @@ class payment(models.Model):
     med = models.IntegerField(null =True, blank= True)
     procedure = models.IntegerField( null =True, blank= True)
     status = models.CharField(max_length=10, choices=STATUS_CHOICES, default='no')
-    Customer_info = models.ForeignKey(Customer, on_delete=models.CASCADE)
+    Customer_info = models.ForeignKey(Customer, on_delete=models.CASCADE, related_name='payments')
     total = models.IntegerField(null =True, blank= True)
     date = models.DateTimeField(default=timezone.now)
     # date = models.DateField(default=timezone.now)
